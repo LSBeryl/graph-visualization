@@ -7,6 +7,8 @@ const animationArr = [];
 const addBtn = document.querySelector("#add");
 const removeBtn = document.querySelector("#remove");
 const connectBtn = document.querySelector("#connect");
+const connectAllBtn = document.querySelector("#connectall");
+const removeAllBtn = document.querySelector("#removeall");
 const errorDiv = document.querySelector("#error");
 const alertDiv = document.querySelector("#alert");
 const dfsBtn = document.querySelector("#dfs");
@@ -25,22 +27,26 @@ function setup() {
 function draw() {
   background(255);
   textAlign(CENTER, CENTER);
-  for (let i in connections) {
-    let nodeOne;
-    let nodeTwo;
-    for (let j in nodes) {
-      if (nodes[j].n == connections[i][0]) {
-        nodeOne = nodes[j];
-      } else if (nodes[j].n == connections[i][1]) {
-        nodeTwo = nodes[j];
+  if (connections.length && nodes.length) {
+    for (let i in connections) {
+      let nodeOne;
+      let nodeTwo;
+      for (let j in nodes) {
+        if (nodes[j].n == connections[i][0]) {
+          nodeOne = nodes[j];
+        } else if (nodes[j].n == connections[i][1]) {
+          nodeTwo = nodes[j];
+        }
       }
+      line(nodeOne.x, nodeOne.y, nodeTwo.x, nodeTwo.y);
     }
-    line(nodeOne.x, nodeOne.y, nodeTwo.x, nodeTwo.y);
   }
-  for (let i in nodes) {
-    nodes[i].show();
-    if (nodes[i].drag) {
-      nodes[i].move();
+  if (nodes.length) {
+    for (let i in nodes) {
+      nodes[i].show();
+      if (nodes[i].drag) {
+        nodes[i].move();
+      }
     }
   }
   if (animationArr.length) {
@@ -170,6 +176,24 @@ removeBtn.addEventListener("click", () => {
     } else alert("올바르지 않은 값입니다.");
   } else alert("존재하는 노드가 없습니다.");
 });
+
+function removeAll() {
+  if (nodes.length) {
+    connections.splice(0, connections.length);
+    nodes.splice(0, nodes.length);
+  } else alert("노드가 존재하지 않습니다.");
+}
+
+function connectAll() {
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      connections.push([Number(nodes[i].n), Number(nodes[j].n)]);
+    }
+  }
+}
+
+connectAllBtn.addEventListener("click", connectAll);
+removeAllBtn.addEventListener("click", removeAll);
 
 // 노드 연결
 connectBtn.addEventListener("click", () => {
