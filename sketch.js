@@ -7,8 +7,10 @@ const animationArr = [];
 const addBtn = document.querySelector("#add");
 const removeBtn = document.querySelector("#remove");
 const connectBtn = document.querySelector("#connect");
+const removeConnectionBtn = document.querySelector("#removeconnection");
 const connectAllBtn = document.querySelector("#connectall");
 const removeAllBtn = document.querySelector("#removeall");
+const removeAllConBtn = document.querySelector("#removeallcon");
 const errorDiv = document.querySelector("#error");
 const alertDiv = document.querySelector("#alert");
 const dfsBtn = document.querySelector("#dfs");
@@ -184,6 +186,10 @@ function removeAll() {
   } else alert("노드가 존재하지 않습니다.");
 }
 
+function removeAllConnections() {
+  connections.splice(0, connections.length);
+}
+
 function connectAll() {
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -192,8 +198,36 @@ function connectAll() {
   }
 }
 
+removeConnectionBtn.addEventListener("click", () => {
+  const nodeOne = prompt("연결을 끊을 첫 번째 노드의 번호를 입력하세요.");
+  const nodeTwo = prompt("연결을 끊을 두 번째 노드의 번호를 입력하세요.");
+
+  if (
+    nodes.filter(
+      (node) => node.n == Number(nodeOne) || node.n == Number(nodeTwo)
+    ).length == 2
+  ) {
+    // 연결을 찾고 제거
+    const connectionIndex = connections.findIndex(
+      (connection) =>
+        (connection[0] === Number(nodeOne) &&
+          connection[1] === Number(nodeTwo)) ||
+        (connection[0] === Number(nodeTwo) && connection[1] === Number(nodeOne))
+    );
+
+    if (connectionIndex !== -1) {
+      connections.splice(connectionIndex, 1);
+    } else {
+      alert("입력된 두 노드 사이에 연결이 존재하지 않습니다.");
+    }
+  } else {
+    alert("올바르지 않은 값입니다. 유효한 노드 번호를 입력하세요.");
+  }
+});
+
 connectAllBtn.addEventListener("click", connectAll);
 removeAllBtn.addEventListener("click", removeAll);
+removeAllConBtn.addEventListener("click", removeAllConnections);
 
 // 노드 연결
 connectBtn.addEventListener("click", () => {
